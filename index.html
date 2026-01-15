@@ -33,8 +33,8 @@
         
         // Where player 1 is the winner
         function calculateElo(player1Elo, player2Elo, K){
-            let e1 = 1 / (1 + 10**((player2Elo-player1Elo)/1500));
-            let e2 = 1 / (1 + 10**((player1Elo-player2Elo)/1500));
+            let e1 = 1 / (1 + 10**((player2Elo-player1Elo)/1600));
+            let e2 = 1 / (1 + 10**((player1Elo-player2Elo)/1600));
 
             let eloChange1 = Math.round(kFactor(player1Elo, 1)*(1-e1));
             let eloChange2 = Math.round(kFactor(player2Elo, 0)*(0-e2));
@@ -60,7 +60,7 @@
 
             let kfact = 50
             if (elo < 1000){
-                kfact = Math.floor(elo/25)+10;
+                kfact = Math.floor(elo/50)+30;
             }
             if (elo > 1000){
                 kfact = 90-Math.floor(elo/25);
