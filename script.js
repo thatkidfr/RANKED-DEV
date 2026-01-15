@@ -12,7 +12,7 @@ function resetData(){
   }
 
 // Where player 1 is the winner
-function calculateElo(player1Elo, player2Elo, K){
+function calculateElo(player1Elo, player2Elo){
   let e1 = 1 / (1 + 10**((player2Elo-player1Elo)/1600));
   let e2 = 1 / (1 + 10**((player1Elo-player2Elo)/1600));
 
@@ -59,7 +59,7 @@ function rankedMatch1v1(){
   let elo1 = users[person1][2];
   let elo2 = users[person2][2];
 
-  let finalElo = calculateElo(elo1, elo2, seasonMaxElo);
+  let finalElo = calculateElo(elo1, elo2);
 
   users[person1][2] = finalElo[0];
   users[person2][2] = finalElo[1];
@@ -82,10 +82,10 @@ function rankedMatch2v2(){
   let team1AverageElo = (users[person1][3] + users[person2][3])/2;
   let team2AverageElo = (users[person3][3] + users[person4][3])/2;
 
-  let elo1 = calculateElo(users[person1][3], team2AverageElo, seasonMaxElo);
-  let elo2 = calculateElo(users[person2][3], team2AverageElo, seasonMaxElo);
-  let elo3 = calculateElo(team1AverageElo, users[person3][3], seasonMaxElo);
-  let elo4 = calculateElo(team1AverageElo, users[person4][3], seasonMaxElo);
+  let elo1 = calculateElo(users[person1][3], team2AverageElo);
+  let elo2 = calculateElo(users[person2][3], team2AverageElo);
+  let elo3 = calculateElo(team1AverageElo, users[person3][3]);
+  let elo4 = calculateElo(team1AverageElo, users[person4][3]);
 
   users[person1][3] = elo1[0];
   users[person2][3] = elo2[0];
