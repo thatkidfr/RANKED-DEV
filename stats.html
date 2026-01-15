@@ -18,6 +18,11 @@
 
 
     <script src="script.js"></script>
+    <script>
+        let playerTEXT = document.getElementById("players");
+        let playerList = users.map(user => `${user[1]} - ${user[0]} - 1v1 Elo: ${user[2]} - 2v2 Elo: ${user[3]} - Games Played: ${user[4]} - Games Won: ${users[5]}`).join("<br>");  
+        playerTEXT.innerHTML = playerList;
+    </script>
 
 
 
