@@ -1,0 +1,137 @@
+function saveData(){
+  localStorage.setItem("DATA", JSON.stringify(users));
+}
+function resetData(){
+  if (!confirm("ARE YOU SURE YOU WANT TO RESET?")){
+    return;
+  }
+  if (!confirm("FINAL WARNING")){return;}
+    localStorage.setItem("DATA", JSON.stringify([]));
+    users = [];
+    updatePlayerText();
+  }
+
+// Where player 1 is the winner
+function calculateElo(player1Elo, player2Elo, K){
+  let e1 = 1 / (1 + 10**((player2Elo-player1Elo)/1600));
+  let e2 = 1 / (1 + 10**((player1Elo-player2Elo)/1600));
+
+  let eloChange1 = Math.round(kFactor(player1Elo, 1)*(1-e1));
+  let eloChange2 = Math.round(kFactor(player2Elo, 0)*(0-e2));
+  
+  let finalP1Elo = player1Elo + eloChange1;
+  let finalP2Elo = player2Elo + eloChange2;
+
+  if (finalP2Elo < 0){
+      finalP2Elo = 0;
+  }
+
+  return [finalP1Elo, finalP2Elo, eloChange1, eloChange2];
+
+}
+
+function kFactor(elo, winlose){
+  
+  if (winlose === 1){
+    
+    let kfact = 90-Math.floor(elo/25);
+    if (kfact < 10){kfact = 10;}
+
+    return kfact;
+  }
+
+  let kfact = 50
+  if (elo < 1000){
+    kfact = Math.floor(elo/50)+30;
+  }
+  if (elo > 1000){
+    kfact = 90-Math.floor(elo/25);
+  }
+  if (kfact < 10){kfact = 10;}
+  
+  return kfact;
+}
+
+function rankedMatch1v1(){
+  let person1 = parseInt(prompt("Player ID of winner"));
+  let person2 = parseInt(prompt("Player ID of loser"));
+
+  let elo1 = users[person1][2];
+  let elo2 = users[person2][2];
+
+  let finalElo = calculateElo(elo1, elo2, seasonMaxElo);
+
+  users[person1][2] = finalElo[0];
+  users[person2][2] = finalElo[1];
+
+  saveData();
+  updatePlayerText();
+
+  let result = String(users[person1][0]) + ": " + String(finalElo[2]) + "\n" + String(users[person2][0]) + ": " + String(finalElo[3]);
+  alert(result);
+}
+
+
+function rankedMatch2v2(){
+  
+  let person1 = parseInt(prompt("Player ID of player #1 winner"));
+  let person2 = parseInt(prompt("Player ID of player #2 winner"));
+  let person3 = parseInt(prompt("Player ID of player #1 loser"));
+  let person4 = parseInt(prompt("Player ID of player #2 loser"));
+
+  let team1AverageElo = (users[person1][3] + users[person2][3])/2;
+  let team2AverageElo = (users[person3][3] + users[person4][3])/2;
+
+  let elo1 = calculateElo(users[person1][3], team2AverageElo, seasonMaxElo);
+  let elo2 = calculateElo(users[person2][3], team2AverageElo, seasonMaxElo);
+  let elo3 = calculateElo(team1AverageElo, users[person3][3], seasonMaxElo);
+  let elo4 = calculateElo(team1AverageElo, users[person4][3], seasonMaxElo);
+
+  users[person1][3] = elo1[0];
+  users[person2][3] = elo2[0];
+  users[person3][3] = elo3[1];
+  users[person4][3] = elo4[1];
+  users[person1][4] += 1;
+  users[person2][4] += 1;
+  users[person3][4] += 1;
+  users[person4][4] += 1;
+  users[person1][5] += 1;
+  users[person2][5] += 1;
+
+  saveData();
+  updatePlayerText();
+  let result = String(users[person1][0]) + ": " + String(elo1[2]) + "\n" + String(users[person2][0]) + ": " + String(elo2[2]) + "\n" + String(users[person3][0]) + ": " + String(elo3[3]) + "\n" + String(users[person4][0]) + ": " + String(elo4[3]);
+  alert(result);
+            
+            
+}
+
+
+function addPlayer(){
+  let playerName = prompt("Enter Name");
+  let playerId = users.length;
+  let playerElo1v1 = 800;
+  let playerElo2v2 = 800;
+  let playerGamesPlayed = 0;
+  let playerWins = 0;
+  if (playerName !== null){
+      users.push([playerName, playerId, playerElo1v1, playerElo2v2, playerGamesPlayed, playerWins]);
+      updatePlayerText();
+  }        
+}
+function updatePlayerText(){
+  let playerTEXT = document.getElementById("players");
+  let playerList = users.map(user => `${user[1]} - ${user[0]} - 1v1 Elo: ${user[2]} - 2v2 Elo: ${user[3]}`).join("<br>");  
+  playerTEXT.innerHTML = playerList;
+}
+
+
+let seasonMaxElo = 100;
+let users = [];
+if (localStorage.getItem('DATA') !== null) {
+  users = JSON.parse(localStorage.getItem("DATA"));
+} else {
+  users = [];
+  localStorage.setItem('DATA', JSON.stringify(users));
+}
+updatePlayerText();
