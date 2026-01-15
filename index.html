@@ -6,14 +6,16 @@
     <title>Ranked Spikeball</title>
 </head>
 <body>
-    <h1>RANKED SPIKEBALL - SEASON 1</h1>
-    <button onclick="rankedMatch2v2();">RANKED MATCH 2v2</button>
-    <button onclick="rankedMatch1v1();">RANKED MATCH 1v1</button>
-    <br>
-    <button onclick="addPlayer();saveData();">ADD PLAYER</button>
-    <h3>---PLAYERS---<br><span id="players"></span></h3>
-    <button onclick="resetData();">RESET</button>
-    <button onclick="alert(users);">debug</button>
+    <center>
+        <h1>RANKED SPIKEBALL - SEASON 1</h1>
+        <button onclick="rankedMatch2v2();">RANKED MATCH 2v2</button>
+        <button onclick="rankedMatch1v1();">RANKED MATCH 1v1</button>
+        <br>
+        <button onclick="addPlayer();saveData();">ADD PLAYER</button>
+        <h3>---PLAYERS---<br><span id="players"></span></h3>
+        <button onclick="resetData();">RESET</button>
+        <button onclick="alert(users);">debug</button>
+    </center>
 
 
     <script>
@@ -108,6 +110,15 @@
             users[person3][3] = elo3[1];
             users[person4][3] = elo4[1];
 
+
+            users[person1][4] += 1;
+            users[person2][4] += 1;
+            users[person3][4] += 1;
+            users[person4][4] += 1;
+
+            users[person1][5] += 1;
+            users[person2][5] += 1;
+
             saveData();
             updatePlayerText();
             
@@ -119,12 +130,14 @@
         
         
         function addPlayer(){
-            playerName = prompt("Enter Name");
-            playerId = users.length;
-            playerElo1v1 = 800;
-            playerElo2v2 = 800;
+            let playerName = prompt("Enter Name");
+            let playerId = users.length;
+            let playerElo1v1 = 800;
+            let playerElo2v2 = 800;
+            let playerGamesPlayed = 0;
+            let playerWins = 0;
             if (playerName !== null){
-                users.push([playerName, playerId, playerElo1v1, playerElo2v2]);
+                users.push([playerName, playerId, playerElo1v1, playerElo2v2, playerGamesPlayed, playerWins]);
                 updatePlayerText();
             }
             
